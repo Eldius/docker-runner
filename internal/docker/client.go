@@ -119,7 +119,12 @@ func buildRequestReaderWithAllFiles(src string) (io.Reader, error) {
 			}
 			err = tw.WriteHeader(tarHeader)
 			if err != nil {
-				err = fmt.Errorf("%w (writing %s):%w", ContextFilesReadErr, d.Name(), err)
+				err = fmt.Errorf("%w (writing header %s):%w", ContextFilesReadErr, d.Name(), err)
+				return nil, err
+			}
+			_, err = tw.Write(b)
+			if err != nil {
+				err = fmt.Errorf("%w (writing content %s):%w", ContextFilesReadErr, d.Name(), err)
 				return nil, err
 			}
 		}
